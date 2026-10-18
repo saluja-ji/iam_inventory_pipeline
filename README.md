@@ -82,9 +82,3 @@ otel/             collector config packaged with the Lambda
 docs/             USER_ACTIONS (start here), OBSERVABILITY, RUNBOOK, SECURITY
 ```
 
-## Resume bullets (fill in the numbers after your first real run)
-
-- Built a serverless Go pipeline (Lambda, EventBridge Scheduler) that snapshots AWS IAM daily into a date-partitioned S3 data lake, queryable with Athena via Glue partition projection; `<N>` roles / `<N>` policies per run.
-- Implemented IAM risk detection (wildcard admin, broad `iam:PassRole`, external-account trust, stale access keys) and a day-over-day diff engine with SNS alerting.
-- Instrumented the service with OpenTelemetry (traces, metrics, trace-correlated structured logs) exported through the ADOT collector to X-Ray and CloudWatch; alarms on errors, DLQ depth and missing runs.
-- Provisioned everything with modular Terraform (S3 state with native locking) and deployed via GitHub Actions using OIDC, with no static credentials; enforced tflint, checkov and golangci-lint in CI.
