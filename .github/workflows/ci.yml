@@ -1,0 +1,49 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go test -race -cover ./...
+      - name: Glue schema is up to date
+        run: make schema && git diff --exit-code terraform/modules/glue/schemas.json
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.10"
+      - run: terraform fmt -check -recursive terraform
+      - run: make tf-validate
+      - uses: terraform-linters/setup-tflint@v4
+      - run: |
+          tflint --init
+          for d in terraform/bootstrap terraform/envs/dev terraform/modules/*; do
+            tflint --chdir "$d" --config "$GITHUB_WORKSPACE/.tflint.hcl"
+          done
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: terraform
+          framework: terraform
+          quiet: true
+          # Documented accepted risks, see docs/SECURITY.md
+          skip_check: CKV_AWS_117,CKV_AWS_116,CKV_AWS_173,CKV_AWS_272,CKV_AWS_158,CKV_AWS_18,CKV_AWS_144,CKV2_AWS_62,CKV_AWS_145,CKV_AWS_338,CKV2_AWS_61

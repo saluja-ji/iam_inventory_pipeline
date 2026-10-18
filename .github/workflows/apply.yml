@@ -1,0 +1,55 @@
+name: apply
+on:
+  push:
+    branches: [main]
+    paths: ["terraform/**", "cmd/**", "internal/**", "otel/**", "go.*"]
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: tf-apply
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    # Required reviewers on this GitHub Environment provide the manual approval gate.
+    # Declaring it also changes the OIDC `sub` claim, which the apply role's trust policy expects.
+    environment: production
+    env:
+      TF_IN_AUTOMATION: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.10"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - run: make test
+      - run: make package VERSION=${{ github.sha }}
+      - name: Write backend and variables
+        run: |
+          cat > terraform/envs/dev/backend.hcl <<EOT
+          bucket       = "${{ vars.TF_STATE_BUCKET }}"
+          key          = "iam-inventory/dev/terraform.tfstate"
+          region       = "${{ vars.AWS_REGION }}"
+          encrypt      = true
+          use_lockfile = true
+          EOT
+          cat > terraform/envs/dev/ci.auto.tfvars <<EOT
+          alert_email       = "${{ vars.ALERT_EMAIL }}"
+          github_repo       = "${{ github.repository }}"
+          state_bucket_name = "${{ vars.TF_STATE_BUCKET }}"
+          adot_layer_arn    = "${{ vars.ADOT_LAYER_ARN }}"
+          EOT
+      - run: terraform init -input=false -backend-config=backend.hcl
+        working-directory: terraform/envs/dev
+      - run: terraform apply -input=false -auto-approve
+        working-directory: terraform/envs/dev

@@ -1,0 +1,85 @@
+{
+  "run_id": "sample",
+  "collected_at": "2026-10-17T12:30:00Z",
+  "account_id": "111111111111",
+  "users": [
+    {
+      "name": "ci-deployer", "id": "AIDASAMPLE1", "arn": "arn:aws:iam::111111111111:user/ci-deployer", "path": "/",
+      "create_date": "2025-01-10T08:00:00Z", "groups": ["developers"],
+      "managed_policies": [], "inline_policies": [],
+      "access_keys": [{"id": "AKIASAMPLEOLDKEY0001", "status": "Active", "create_date": "2025-02-01T08:00:00Z"}]
+    },
+    {
+      "name": "alice", "id": "AIDASAMPLE2", "arn": "arn:aws:iam::111111111111:user/alice", "path": "/",
+      "create_date": "2026-09-01T08:00:00Z", "groups": ["developers"],
+      "managed_policies": [{"name": "ReadOnlyAccess", "arn": "arn:aws:iam::aws:policy/ReadOnlyAccess"}],
+      "inline_policies": [], "access_keys": []
+    }
+  ],
+  "groups": [
+    {
+      "name": "developers", "id": "AGPASAMPLE1", "arn": "arn:aws:iam::111111111111:group/developers", "path": "/",
+      "create_date": "2025-01-10T08:00:00Z",
+      "managed_policies": [{"name": "ReadOnlyAccess", "arn": "arn:aws:iam::aws:policy/ReadOnlyAccess"}],
+      "inline_policies": []
+    }
+  ],
+  "roles": [
+    {
+      "name": "admin-role", "id": "AROASAMPLE1", "arn": "arn:aws:iam::111111111111:role/admin-role", "path": "/",
+      "create_date": "2025-03-01T08:00:00Z",
+      "trust_policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "arn:aws:iam::111111111111:root"}, "Action": "sts:AssumeRole"}]},
+      "managed_policies": [{"name": "AdministratorAccess", "arn": "arn:aws:iam::aws:policy/AdministratorAccess"}],
+      "inline_policies": [],
+      "last_used": {"date": "2026-10-16T09:00:00Z", "region": "ap-south-1"}
+    },
+    {
+      "name": "readonly-role", "id": "AROASAMPLE2", "arn": "arn:aws:iam::111111111111:role/readonly-role", "path": "/",
+      "create_date": "2025-03-01T08:00:00Z",
+      "trust_policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "ec2.amazonaws.com"}, "Action": "sts:AssumeRole"}]},
+      "managed_policies": [{"name": "ReadOnlyAccess", "arn": "arn:aws:iam::aws:policy/ReadOnlyAccess"}],
+      "inline_policies": []
+    },
+    {
+      "name": "wildcard-role", "id": "AROASAMPLE3", "arn": "arn:aws:iam::111111111111:role/wildcard-role", "path": "/",
+      "create_date": "2026-10-15T08:00:00Z",
+      "trust_policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]},
+      "managed_policies": [],
+      "inline_policies": [{"name": "everything", "document": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": "*", "Resource": "*"}]}}]
+    },
+    {
+      "name": "cross-account-role", "id": "AROASAMPLE4", "arn": "arn:aws:iam::111111111111:role/cross-account-role", "path": "/",
+      "create_date": "2026-06-01T08:00:00Z",
+      "trust_policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "arn:aws:iam::999999999999:root"}, "Action": "sts:AssumeRole"}]},
+      "permissions_boundary": "arn:aws:iam::111111111111:policy/boundary",
+      "managed_policies": [], "inline_policies": []
+    },
+    {
+      "name": "passrole-role", "id": "AROASAMPLE5", "arn": "arn:aws:iam::111111111111:role/passrole-role", "path": "/",
+      "create_date": "2026-08-01T08:00:00Z",
+      "trust_policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "ecs-tasks.amazonaws.com"}, "Action": "sts:AssumeRole"}]},
+      "managed_policies": [{"name": "deploy", "arn": "arn:aws:iam::111111111111:policy/deploy"}],
+      "inline_policies": []
+    }
+  ],
+  "policies": [
+    {
+      "name": "ReadOnlyAccess", "id": "ANPASAMPLE1", "arn": "arn:aws:iam::aws:policy/ReadOnlyAccess", "path": "/",
+      "aws_managed": true, "is_attachable": true, "attachment_count": 3, "permissions_boundary_usage_count": 0,
+      "default_version_id": "v1", "create_date": "2015-02-06T18:39:48Z", "update_date": "2026-01-01T00:00:00Z",
+      "document": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": ["s3:Get*", "s3:List*"], "Resource": "*"}]}
+    },
+    {
+      "name": "AdministratorAccess", "id": "ANPASAMPLE2", "arn": "arn:aws:iam::aws:policy/AdministratorAccess", "path": "/",
+      "aws_managed": true, "is_attachable": true, "attachment_count": 1, "permissions_boundary_usage_count": 0,
+      "default_version_id": "v1", "create_date": "2015-02-06T18:39:46Z", "update_date": "2015-02-06T18:39:46Z",
+      "document": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": "*", "Resource": "*"}]}
+    },
+    {
+      "name": "deploy", "id": "ANPASAMPLE3", "arn": "arn:aws:iam::111111111111:policy/deploy", "path": "/",
+      "aws_managed": false, "is_attachable": true, "attachment_count": 1, "permissions_boundary_usage_count": 0,
+      "default_version_id": "v2", "create_date": "2026-08-01T08:00:00Z", "update_date": "2026-08-02T08:00:00Z",
+      "document": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": ["iam:PassRole", "ecs:*"], "Resource": "*"}]}
+    }
+  ]
+}

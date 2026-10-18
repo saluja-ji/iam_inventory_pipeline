@@ -1,0 +1,26 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl.bak
+*.tfvars
+!*.tfvars.example
+backend.hcl
+crash.log
+terraform/envs/*/.build/
+.build/
+
+# Build and local output
+/build/
+/out/
+*.zip
+/bootstrap
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Keep CI helper output out of git
+terraform/envs/*/ci.auto.tfvars
+terraform/envs/*/tfplan

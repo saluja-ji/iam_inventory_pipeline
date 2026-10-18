@@ -1,0 +1,66 @@
+name: plan
+on:
+  pull_request:
+    paths: ["terraform/**", "cmd/**", "internal/**", "otel/**", "go.*"]
+
+permissions:
+  id-token: write # OIDC, no static AWS keys
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: tf-plan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    # Fork PRs get no OIDC token and no secrets, which is exactly what we want.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.10"
+          terraform_wrapper: false
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - run: make package
+      - name: Write backend and variables
+        run: |
+          cat > terraform/envs/dev/backend.hcl <<EOT
+          bucket       = "${{ vars.TF_STATE_BUCKET }}"
+          key          = "iam-inventory/dev/terraform.tfstate"
+          region       = "${{ vars.AWS_REGION }}"
+          encrypt      = true
+          use_lockfile = true
+          EOT
+          cat > terraform/envs/dev/ci.auto.tfvars <<EOT
+          alert_email       = "${{ vars.ALERT_EMAIL }}"
+          github_repo       = "${{ github.repository }}"
+          state_bucket_name = "${{ vars.TF_STATE_BUCKET }}"
+          adot_layer_arn    = "${{ vars.ADOT_LAYER_ARN }}"
+          EOT
+      - run: terraform init -input=false -backend-config=backend.hcl
+        working-directory: terraform/envs/dev
+      - run: terraform plan -input=false -no-color -out=tfplan | tee plan.txt
+        working-directory: terraform/envs/dev
+      - name: Comment plan on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let plan = fs.readFileSync('terraform/envs/dev/plan.txt', 'utf8');
+            if (plan.length > 60000) plan = plan.slice(-60000);
+            const body = `### Terraform plan\n\`\`\`\n${plan}\n\`\`\``;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number, body,
+            });

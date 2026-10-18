@@ -1,0 +1,7 @@
+# Copy to dev.tfvars (git-ignored) and fill in.
+alert_email       = "you@example.com"
+github_repo       = "saluja-ji/iam_inventory_pipeline"
+state_bucket_name = "REPLACE-with-bootstrap-output"
+
+# Optional: enable OpenTelemetry export (see docs/USER_ACTIONS.md, step 6).
+# adot_layer_arn = "arn:aws:lambda:ap-south-1:<ADOT-publisher-account>:layer:aws-otel-collector-arm64-ver-<x-y-z>:<n>"

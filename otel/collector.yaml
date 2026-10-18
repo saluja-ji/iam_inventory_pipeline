@@ -1,0 +1,25 @@
+# Config for the ADOT collector Lambda layer (extension). Packaged next to the binary by `make package`.
+# Traces -> AWS X-Ray, metrics -> CloudWatch (EMF) under namespace IAMInventory/OTel.
+# To send to another backend (Grafana Cloud, Honeycomb, Jaeger...), swap the exporters here;
+# the Go code only speaks OTLP and does not change.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: localhost:4318
+
+exporters:
+  awsxray:
+  awsemf:
+    namespace: IAMInventory/OTel
+    log_group_name: ${env:AWS_LAMBDA_LOG_GROUP_NAME}
+    log_stream_name: otel-metrics
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [awsxray]
+    metrics:
+      receivers: [otlp]
+      exporters: [awsemf]

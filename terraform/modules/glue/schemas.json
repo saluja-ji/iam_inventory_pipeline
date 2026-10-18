@@ -1,0 +1,302 @@
+{
+  "access_keys": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "user_name",
+      "type": "string"
+    },
+    {
+      "name": "access_key_id",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "create_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "age_days",
+      "type": "int"
+    }
+  ],
+  "findings": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "rule",
+      "type": "string"
+    },
+    {
+      "name": "severity",
+      "type": "string"
+    },
+    {
+      "name": "resource_type",
+      "type": "string"
+    },
+    {
+      "name": "resource_name",
+      "type": "string"
+    },
+    {
+      "name": "arn",
+      "type": "string"
+    },
+    {
+      "name": "detail",
+      "type": "string"
+    }
+  ],
+  "groups": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "group_name",
+      "type": "string"
+    },
+    {
+      "name": "group_id",
+      "type": "string"
+    },
+    {
+      "name": "arn",
+      "type": "string"
+    },
+    {
+      "name": "path",
+      "type": "string"
+    },
+    {
+      "name": "create_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "managed_policy_count",
+      "type": "int"
+    },
+    {
+      "name": "inline_policy_count",
+      "type": "int"
+    }
+  ],
+  "policies": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "policy_name",
+      "type": "string"
+    },
+    {
+      "name": "policy_id",
+      "type": "string"
+    },
+    {
+      "name": "arn",
+      "type": "string"
+    },
+    {
+      "name": "path",
+      "type": "string"
+    },
+    {
+      "name": "is_aws_managed",
+      "type": "boolean"
+    },
+    {
+      "name": "is_attachable",
+      "type": "boolean"
+    },
+    {
+      "name": "attachment_count",
+      "type": "int"
+    },
+    {
+      "name": "permissions_boundary_usage_count",
+      "type": "int"
+    },
+    {
+      "name": "default_version_id",
+      "type": "string"
+    },
+    {
+      "name": "create_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "update_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "document",
+      "type": "string"
+    }
+  ],
+  "role_policy_attachments": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "role_name",
+      "type": "string"
+    },
+    {
+      "name": "role_arn",
+      "type": "string"
+    },
+    {
+      "name": "policy_type",
+      "type": "string"
+    },
+    {
+      "name": "policy_name",
+      "type": "string"
+    },
+    {
+      "name": "policy_arn",
+      "type": "string"
+    }
+  ],
+  "roles": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "role_name",
+      "type": "string"
+    },
+    {
+      "name": "role_id",
+      "type": "string"
+    },
+    {
+      "name": "arn",
+      "type": "string"
+    },
+    {
+      "name": "path",
+      "type": "string"
+    },
+    {
+      "name": "create_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "permissions_boundary_arn",
+      "type": "string"
+    },
+    {
+      "name": "last_used_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "last_used_region",
+      "type": "string"
+    },
+    {
+      "name": "managed_policy_count",
+      "type": "int"
+    },
+    {
+      "name": "inline_policy_count",
+      "type": "int"
+    },
+    {
+      "name": "trust_policy",
+      "type": "string"
+    }
+  ],
+  "trust_relationships": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "role_name",
+      "type": "string"
+    },
+    {
+      "name": "role_arn",
+      "type": "string"
+    },
+    {
+      "name": "effect",
+      "type": "string"
+    },
+    {
+      "name": "principal_type",
+      "type": "string"
+    },
+    {
+      "name": "principal",
+      "type": "string"
+    },
+    {
+      "name": "action",
+      "type": "string"
+    },
+    {
+      "name": "has_condition",
+      "type": "boolean"
+    }
+  ],
+  "users": [
+    {
+      "name": "run_id",
+      "type": "string"
+    },
+    {
+      "name": "user_name",
+      "type": "string"
+    },
+    {
+      "name": "user_id",
+      "type": "string"
+    },
+    {
+      "name": "arn",
+      "type": "string"
+    },
+    {
+      "name": "path",
+      "type": "string"
+    },
+    {
+      "name": "create_date",
+      "type": "timestamp"
+    },
+    {
+      "name": "permissions_boundary_arn",
+      "type": "string"
+    },
+    {
+      "name": "group_count",
+      "type": "int"
+    },
+    {
+      "name": "managed_policy_count",
+      "type": "int"
+    },
+    {
+      "name": "inline_policy_count",
+      "type": "int"
+    },
+    {
+      "name": "access_key_count",
+      "type": "int"
+    }
+  ]
+}
