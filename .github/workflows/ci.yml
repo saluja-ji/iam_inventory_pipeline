@@ -23,6 +23,22 @@ jobs:
         with:
           version: latest
 
+  pulumi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pulumi
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      # Offline resource tests using Pulumi mocks: no AWS account or Pulumi login needed.
+      - run: go test -race ./...
+
+  # Legacy Terraform stacks, kept for reference during the migration (see docs/TERRAFORM_VS_PULUMI.md).
   terraform:
     runs-on: ubuntu-latest
     steps:

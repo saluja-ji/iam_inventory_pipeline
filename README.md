@@ -1,8 +1,8 @@
 # IAM Inventory Pipeline
 
-A serverless Go + Terraform pipeline that snapshots AWS IAM (users, groups, roles, policies, access keys) every day at **6 PM IST**, stores it as a date-partitioned data lake in S3, makes the history queryable with Athena, flags risky permissions, tells you what changed since yesterday, and is fully instrumented with **OpenTelemetry**.
+A serverless Go + Pulumi pipeline that snapshots AWS IAM (users, groups, roles, policies, access keys) every day at **6 PM IST**, stores it as a date-partitioned data lake in S3, makes the history queryable with Athena, flags risky permissions, tells you what changed since yesterday, and is fully instrumented with **OpenTelemetry**.
 
-> Status: code, tests and Terraform are complete and validated offline. Nothing has been deployed yet, because no AWS credentials have been provided. [docs/USER_ACTIONS.md](docs/USER_ACTIONS.md) lists exactly what to do to deploy it.
+> Status: code, tests and infrastructure (Pulumi in Go, plus the original Terraform kept for reference) are complete and validated offline. Nothing has been deployed yet, because no AWS credentials have been provided. [docs/USER_ACTIONS.md](docs/USER_ACTIONS.md) lists exactly what to do to deploy it.
 
 > New here? Read [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) first.
 
@@ -37,7 +37,7 @@ flowchart LR
 | Data engineering: JSON to Parquet, Hive-style partitions, Glue + Athena with partition projection | [internal/transform](internal/transform), [terraform/modules/glue](terraform/modules/glue) |
 | Security analytics: wildcard admin, broad PassRole, external/any-principal trust, stale keys | [internal/analyze](internal/analyze) |
 | Change detection (daily diff, tolerant of missed days, ignores volatile fields) | [internal/analyze/diff.go](internal/analyze/diff.go) |
-| IaC: modular Terraform, S3 remote state with native locking, least-privilege IAM | [terraform/](terraform) |
+| IaC: Pulumi (Go) components, S3 state backend, offline mocked tests, least-privilege IAM; original Terraform in [terraform/](terraform) | [pulumi/](pulumi), [docs/TERRAFORM_VS_PULUMI.md](docs/TERRAFORM_VS_PULUMI.md) |
 | CI/CD with GitHub OIDC (no static keys), plan on PR, approval-gated apply | [.github/workflows](.github/workflows) |
 | Observability: OpenTelemetry traces + metrics, trace-correlated logs, CloudWatch alarms | [docs/OBSERVABILITY.md](docs/OBSERVABILITY.md) |
 
@@ -77,7 +77,8 @@ s3://<bucket>/diff/dt=YYYY-MM-DD/diff.json                    added / removed / 
 ```
 cmd/lambda        scheduled entrypoint        cmd/local      same pipeline, offline or against real AWS
 cmd/schemagen     Go structs -> Glue schemas  internal/*     collector, analyze, transform, store, telemetry, pipeline
-terraform/        bootstrap/ modules/ envs/dev/ sandbox_identities/
+pulumi/           bootstrap/ components/ dev/ sandbox_identities/   (see docs/PULUMI.md)
+terraform/        legacy Terraform, kept for comparison
 otel/             collector config packaged with the Lambda
 docs/             USER_ACTIONS (start here), OBSERVABILITY, RUNBOOK, SECURITY
 ```

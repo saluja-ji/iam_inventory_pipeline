@@ -1,0 +1,3 @@
+name: iam-inventory-bootstrap
+description: Run ONCE, locally (file:// backend). Creates the S3 bucket that holds all other Pulumi state.
+runtime: go

@@ -1,0 +1,9 @@
+# Copy to Pulumi.dev.yaml (git-ignored) or set each value with `pulumi config set`.
+config:
+  aws:region: ap-south-1
+  iam-inventory:alertEmail: you@example.com
+  iam-inventory:githubRepo: saluja-ji/iam_inventory_pipeline
+  iam-inventory:stateBucketName: REPLACE-with-bootstrap-output
+  # Optional: enable OpenTelemetry export (see docs/USER_ACTIONS.md, step 6).
+  # iam-inventory:adotLayerArn: arn:aws:lambda:ap-south-1:<ADOT-publisher-account>:layer:aws-otel-collector-arm64-ver-<x-y-z>:<n>
+  # iam-inventory:lambdaExtraEnvironment: '{"MAX_KEY_AGE_DAYS":"1"}'

@@ -10,6 +10,11 @@ crash.log
 terraform/envs/*/.build/
 .build/
 
+# Pulumi
+pulumi/**/Pulumi.*.yaml
+!pulumi/**/Pulumi.*.yaml.example
+.pulumi/
+
 # Build and local output
 /build/
 /out/
